@@ -1,12 +1,20 @@
 const express = require("express");
 
+const { isLoggedIn, notLoggedIn } = require("../middleware/auth");
+
 const authController = require("../controllers/auth");
 
 const router = express.Router();
 
-router.get("/login", authController.getLogin);
+router.get("/", isLoggedIn, authController.getLogin);
 
-router.get("/register", authController.getRegister);
+router.post("/", isLoggedIn, authController.postLogin);
+
+router.get("/login", isLoggedIn, authController.getLogin);
+
+router.get("/logout", notLoggedIn, authController.getLogout);
+
+router.get("/register", isLoggedIn, authController.getRegister);
 
 router.post("/login", authController.postLogin);
 

@@ -11,6 +11,11 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
+exports.getLogout = (req, res, next) => {
+  req.session.destroy();
+  res.redirect("login");
+};
+
 exports.getRegister = (req, res, next) => {
   res.render("auth/register", {
     path: "/register",
@@ -49,14 +54,30 @@ async function postRegister(req, res, next) {
 }
 
 exports.postLogin = (req, res, next) => {
-  User.findByPk(1)
+  User.findOne({
+    where: { email: req.body.email },
+  })
     .then((user) => {
-      console.log(user);
-      req.session.isLoggedIn = true;
-      req.session.fullname = user.fullname;
-      res.redirect("/dashboard");
+      if (!user) {
+        return res.redirect("login");
+      }
+      bcrypt
+        .compare(req.body.password, user.password)
+        .then((isMatched) => {
+          if (isMatched) {
+            req.session.isLoggedIn = true;
+            req.session.fullname = user.fullname;
+            return res.redirect("dashboard");
+          }
+          res.redirect("login");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 /*
