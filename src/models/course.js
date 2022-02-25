@@ -2,8 +2,8 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../../utils/database");
 
-const Student = sequelize.define(
-  "students",
+const Course = sequelize.define(
+  "courses",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -11,21 +11,13 @@ const Student = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    fullname: {
+    title: {
       type: Sequelize.STRING,
       allowNull: false,
       select: false,
     },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    contactnumber: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    address: {
-      type: Sequelize.STRING,
+    description: {
+      type: Sequelize.STRING(1000),
       allowNull: false,
     },
     date: {
@@ -44,4 +36,4 @@ const Student = sequelize.define(
   }
 );
 
-module.exports = Student;
+module.exports = Course;

@@ -4,7 +4,7 @@ const path = require("path");
 const express = require("express");
 const csrf = require("csurf");
 const session = require("express-session");
-
+const cookieSession = require("cookie-session")
 const sequelize = require("./utils/database");
 
 const PORT = process.env.PORT || 3000;
@@ -18,12 +18,24 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "src/views");
 
+
+/*
 app.use(
   session({
     secret: "my secret",
-    resave: false,
+    cookie: { maxAge: 60000 },
+    resave: true,
     saveUninitialized: false,
   })
+);
+*/
+
+app.use(
+  cookieSession({
+   name: 'session',
+   keys: ["my secet key"],
+   maxAge: 24 * 60 * 60 * 1000 // 24 hours
+ })
 );
 
 app.use(function (req, res, next) {
